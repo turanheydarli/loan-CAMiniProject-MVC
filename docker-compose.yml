@@ -1,0 +1,6 @@
+﻿services:
+  baxici.webmvc:
+    image: baxici.webmvc
+    build:
+      context: .
+      dockerfile: Baxici.WebMVC/Dockerfile
