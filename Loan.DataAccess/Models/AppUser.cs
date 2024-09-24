@@ -2,6 +2,6 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Loan.DataAccess.Models;
 
-public class AppUser : IdentityUser<Guid>
+public class AppUser : IdentityUser
 {
 }
