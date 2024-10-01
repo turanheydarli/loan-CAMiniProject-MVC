@@ -32,7 +32,6 @@ namespace Loan.WebMVC.Filters
                 context.Result = CreateViewResult(context);
                 context.ExceptionHandled = true;
             }
-            // Handle UserNotFoundException
             else if (context.Exception is UserNotFoundException userNotFoundException)
             {
                 _logger.LogWarning("UserNotFoundException: {Message}", userNotFoundException.Message);
