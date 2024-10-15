@@ -1,17 +1,26 @@
+using System.Configuration;
+using FluentValidation.AspNetCore;
 using Loan.Application.Extensions;
+using Loan.Application.Validators;
 using Loan.DataAccess.Extensions;
+using Loan.WebMVC.Extensions;
 using Loan.WebMVC.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddDataAccessServices(builder.Configuration);
-
 // Add services to the container.
-builder.Services.AddControllersWithViews(op => { op.Filters.Add<GlobalExceptionFilter>(); });
+builder.Services.AddControllersWithViews(o =>
+{
+    // o.Filters.Add<GlobalExceptionFilter>();
+    
+}).AddMvcSettings();
+
+builder.Services.AddApplicationServices(builder.Configuration);
+
+builder.Services.AddDataAccessServices(builder.Configuration);
 builder.Services.AddScoped<GlobalExceptionFilter>();
-builder.Services.AddApplicationServices();
 
-
+// builder.Logging.AddApplicationLogger();
 
 var app = builder.Build();
 
@@ -23,13 +32,17 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+app.UseCors();
+
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+app.UseNToastNotify();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
 
 app.MapControllerRoute(
     name: "areas",

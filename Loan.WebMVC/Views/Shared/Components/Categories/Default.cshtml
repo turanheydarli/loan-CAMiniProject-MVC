@@ -1,0 +1,25 @@
+@model IEnumerable<CategoryDto>
+
+<div class="navbar-nav w-100 overflow-hidden" style="height: 410px">
+    @foreach (var category in Model)
+    {
+        if (category.SubCategories != null && category.SubCategories.Any())
+        {
+            <div class="nav-item dropdown">
+                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
+                    @category.Name <i class="fa fa-angle-down float-right mt-1"></i>
+                </a>
+                <div class="dropdown-menu position-absolute bg-secondary border-0 rounded-0 w-100 m-0">
+                    @foreach (var subCategory in category.SubCategories)
+                    {
+                        <a href="~/Category/@subCategory.Id" class="dropdown-item">@subCategory.Name</a>
+                    }
+                </div>
+            </div>
+        }
+        else
+        {
+            <a href="~/Category/@category.Id" class="nav-item nav-link">@category.Name</a>
+        }
+    }
+</div>

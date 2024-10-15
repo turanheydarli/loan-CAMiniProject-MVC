@@ -1,5 +1,5 @@
-using Loan.Application.Features.AuthServices.Abstraction;
-using Loan.Application.Features.AuthServices.DTOs;
+using Loan.Application.DTOs;
+using Loan.Application.Services.Abstraction;
 using Loan.DataAccess.Models;
 using Loan.WebMVC.Models;
 using Microsoft.AspNetCore.Identity;
@@ -17,9 +17,17 @@ public class AuthController : Controller
     }
 
     [Route("/auth/login", Name = "auth-login")]
-    public async Task<IActionResult> Login()
+    public IActionResult Login()
     {
         return View();
+    }
+
+    [Route("/auth/logout", Name = "auth-logout")]
+    public async Task<IActionResult> Logout(LoginViewModel model)
+    {
+        await _userService.LogoutAsync();
+
+        return RedirectToAction("Index", "Home");
     }
 
     [HttpPost]

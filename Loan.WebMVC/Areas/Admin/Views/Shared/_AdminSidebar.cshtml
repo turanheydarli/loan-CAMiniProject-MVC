@@ -1,0 +1,44 @@
+<nav class="sidebar sidebar-offcanvas" id="sidebar">
+    <ul class="nav">
+        <li class="nav-item">
+            <a class="nav-link" href="@Url.Action("Index", "Home")">
+                <i class="mdi mdi-home menu-icon"></i>
+                <span class="menu-title">Dashboard</span>
+            </a>
+        </li>
+        @if (User.IsInRole("Admin"))
+        {
+            <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="collapse" href="#merchants-submenu" aria-expanded="false" aria-controls="merchants-submenu">
+                    <i class="mdi mdi-circle-outline menu-icon"></i>
+                    <span class="menu-title">Merchants</span>
+                    <i class="menu-arrow"></i>
+                </a>
+                <div class="collapse" id="merchants-submenu">
+                    <ul class="nav flex-column sub-menu">
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="@Url.Action("Create", "Merchants")">Create</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="@Url.Action("Index", "Merchants")">List</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+        }
+        <li class="nav-item">
+            <a class="nav-link" href="@Url.Action("Settings", "Dashboard")">
+                <i class="mdi mdi-settings menu-icon"></i>
+                <span class="menu-title">Settings</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="@Url.Action("Logout", "Auth")">
+                <i class="mdi mdi-logout menu-icon"></i>
+                <span class="menu-title">Logout</span>
+            </a>
+        </li>
+    </ul>
+</nav>

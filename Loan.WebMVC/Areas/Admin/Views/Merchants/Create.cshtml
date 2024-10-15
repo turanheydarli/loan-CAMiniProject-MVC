@@ -1,0 +1,40 @@
+@model MerchantApplyViewModel
+
+<div class="row">
+    <div class="col-lg-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Create New Merchant</h4>
+                <p class="card-description">
+                    Create New Merchant
+                </p>
+                <form asp-action="Create" method="post" class="forms-sample">
+                    @Html.AntiForgeryToken()
+
+                    @* <!-- Merchant Name --> *@
+                    @* <div class="form-group"> *@
+                    @*     <label for="Merchant.Name">Merchant Name</label> *@
+                    @*     <input type="text" class="form-control" id="Merchant.Name" name="Merchant.Name" value="@Model.Merchant.Name" required/> *@
+                    @*     @Html.ValidationMessageFor(m => m.Merchant.Name, "", new { @class = "text-danger" }) *@
+                    @* </div> *@
+                    @* *@
+                    @* <!-- User Selection --> *@
+                    @* <div class="form-group"> *@
+                    @*     <label for="UserId">Associated User</label> *@
+                    @*     <select class="form-control" id="UserId" name="UserId" required> *@
+                    @*         <option value="">-- Select User --</option> *@
+                    @*         @foreach (var user in Model.Users) *@
+                    @*         { *@
+                    @*             <option value="@user.Id">@user.UserName</option> *@
+                    @*         } *@
+                    @*     </select> *@
+                    @*     @Html.ValidationMessageFor(m => m.UserId, "", new { @class = "text-danger" }) *@
+                    @* </div> *@
+
+                    <button type="submit" class="btn btn-primary me-2">Create</button>
+                    <a href="@Url.Action("Index", "Merchants", new { area = "Admin" })" class="btn btn-light">Cancel</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

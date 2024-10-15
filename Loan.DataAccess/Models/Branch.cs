@@ -9,5 +9,4 @@ public class Branch : BaseEntity
     public Merchant Merchant { get; set; }
     public Address Address { get; set; }
     public ICollection<Employee> Employees { get; set; }  
-    public ICollection<Category> Categories { get; set; }  
 }

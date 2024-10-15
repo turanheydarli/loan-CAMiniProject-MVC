@@ -1,6 +1,5 @@
 using AutoMapper;
-using Loan.Application.Features.BranchServices.DTOs;
-using Loan.Application.Features.MerchantServices.DTOs;
+using Loan.Application.DTOs;
 using Loan.DataAccess.Models;
 
 namespace Loan.Application.MappingProfiles;
@@ -10,10 +9,10 @@ public class CustomProfile : Profile
     public CustomProfile()
     {
         CreateMap<Merchant, MerchantDto>().ReverseMap();
-        CreateMap<Merchant, MerchantCreateDto>().ReverseMap();
-        CreateMap<Merchant, MerchantUpdateDto>().ReverseMap();
-
         CreateMap<Branch, BranchDto>().ReverseMap();
-        CreateMap<Branch, BranchCreateDto>().ReverseMap();
+        CreateMap<Employee, EmployeeDto>().ReverseMap();
+        CreateMap<Category, CategoryDto>().ReverseMap();
+        CreateMap<CarouselItem, CarouselItemDto>().ReverseMap();
+        CreateMap<AppUser, UserDto>().ReverseMap();
     }
 }

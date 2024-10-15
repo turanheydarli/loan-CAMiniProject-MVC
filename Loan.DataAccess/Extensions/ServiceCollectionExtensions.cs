@@ -1,9 +1,12 @@
+using Loan.DataAccess.Factories;
 using Loan.DataAccess.Models;
 using Loan.DataAccess.Persistence;
 using Loan.DataAccess.Persistence.Repositories;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -21,24 +24,25 @@ public static class ServiceCollectionExtensions
 
         services.AddIdentity<AppUser, AppRole>()
             .AddRoles<AppRole>()
-            .AddEntityFrameworkStores<AppDbContext>();
-        
+            .AddEntityFrameworkStores<AppDbContext>()   
+            .AddDefaultTokenProviders();
+
+        services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+            .AddCookie(options =>
+            {
+                options.LoginPath = "/auth/login";
+                options.LogoutPath = "/auth/logout";
+                options.AccessDeniedPath = "/auth/accessDenied";
+                options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
+                options.Cookie.SameSite = SameSiteMode.Lax;
+                options.Cookie.Name = CookieAuthenticationDefaults.AuthenticationScheme;
+            });
+
+
+        services.AddAuthorization();
         
         services.AddScoped<IUserClaimsPrincipalFactory<AppUser>, CustomUserClaimsPrincipalFactory>();
 
-        services.AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-            })
-            .AddCookie(opts =>
-            {
-                opts.LoginPath = "/auth/login";
-                opts.LogoutPath = "/auth/logout";
-                opts.AccessDeniedPath = "/auth/accessDenied";
-            });
-
-        
         services.AddScoped(typeof(IRepository<,>), typeof(EfRepository<,>));
         services.AddScoped(typeof(IAsyncRepository<,>), typeof(EfRepository<,>));
 

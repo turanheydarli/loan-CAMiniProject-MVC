@@ -1,8 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Loan.Shared.Exceptions; // Ensure correct namespace
 using Microsoft.Extensions.Logging;
 using System.Linq;
+using FluentValidation;
+using Loan.Application.Exceptions;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
@@ -41,7 +42,20 @@ namespace Loan.WebMVC.Filters
                 context.Result = CreateViewResult(context);
                 context.ExceptionHandled = true;
             }
-            // Handle InvalidCredentialsException
+            else if (context.Exception is ValidationException validationException)
+            {
+                _logger.LogWarning("ValidationException: {Message}", validationException.Message);
+
+                foreach (var error in validationException.Errors)
+                {
+                    context.ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+                }
+
+                context.ModelState.AddModelError(validationException.Source, validationException.Message);
+
+                context.Result = CreateViewResult(context);
+                context.ExceptionHandled = true;
+            }
             else if (context.Exception is InvalidCredentialsException invalidCredentialsException)
             {
                 _logger.LogWarning("InvalidCredentialsException: {Message}", invalidCredentialsException.Message);
@@ -54,19 +68,25 @@ namespace Loan.WebMVC.Filters
             // Optionally, handle other custom exceptions here
 
             // Optionally, handle generic exceptions
-            // else
-            // {
-            //     _logger.LogError(context.Exception, "An unhandled exception occurred.");
-            //     context.Result = new ViewResult
-            //     {
-            //         ViewName = "Error",
-            //         ViewData = new ViewDataDictionary(new EmptyModelMetadataProvider(), context.ModelState)
-            //         {
-            //             { "ErrorMessage", "An unexpected error occurred. Please try again later." }
-            //         }
-            //     };
-            //     context.ExceptionHandled = true;
-            // }
+            else
+            {
+                context.ModelState.AddModelError(string.Empty, context.Exception.Message);
+
+                context.Result = CreateViewResult(context);
+                context.ExceptionHandled = true;
+
+                return;
+                _logger.LogError(context.Exception, "An unhandled exception occurred.");
+                context.Result = new ViewResult
+                {
+                    ViewName = "Error",
+                    ViewData = new ViewDataDictionary(new EmptyModelMetadataProvider(), context.ModelState)
+                    {
+                        { "ErrorMessage", "An unexpected error occurred. Please try again later." }
+                    }
+                };
+                context.ExceptionHandled = true;
+            }
         }
 
         private ViewResult CreateViewResult(ExceptionContext context)
