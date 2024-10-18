@@ -14,5 +14,6 @@ public class CustomProfile : Profile
         CreateMap<Category, CategoryDto>().ReverseMap();
         CreateMap<CarouselItem, CarouselItemDto>().ReverseMap();
         CreateMap<AppUser, UserDto>().ReverseMap();
+        CreateMap<Media, MediaDto>().ReverseMap();
     }
 }

@@ -5,6 +5,8 @@ namespace Loan.Application.Services.Abstraction
 {
     public interface IEmployeeService : IGenericService<Employee, EmployeeDto>
     {
-        Task<List<EmployeeDto>> GetByBranchIdAsync(int branchId);
+        Task<List<EmployeeDto>> GetByBranchIdAsync(Guid branchId);
+        Task<EmployeeDto> CreateAsync(EmployeeDto employee, Guid branchId);
+        
     }
 }

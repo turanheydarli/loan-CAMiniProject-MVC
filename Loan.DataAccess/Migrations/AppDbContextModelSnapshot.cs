@@ -24,11 +24,12 @@ namespace Loan.DataAccess.Migrations
 
             modelBuilder.Entity("Loan.DataAccess.Models.Address", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("uniqueidentifier");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<Guid>("BranchId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("City")
                         .HasColumnType("nvarchar(max)");
@@ -50,13 +51,17 @@ namespace Loan.DataAccess.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("BranchId")
+                        .IsUnique();
+
                     b.ToTable("Addresses");
                 });
 
             modelBuilder.Entity("Loan.DataAccess.Models.AppRole", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -82,8 +87,8 @@ namespace Loan.DataAccess.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "9c5098b3-d0d4-49c2-a59e-7ea06d289711",
-                            ConcurrencyStamp = "11e80a96-78ae-442c-99db-c2518625c10c",
+                            Id = new Guid("ec7b8465-68ea-4eed-8089-ec4481334749"),
+                            ConcurrencyStamp = "dca361b1-437b-43e6-8827-83f0243c3cf9",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -91,8 +96,9 @@ namespace Loan.DataAccess.Migrations
 
             modelBuilder.Entity("Loan.DataAccess.Models.AppUser", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
@@ -156,17 +162,17 @@ namespace Loan.DataAccess.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "1380281e-e7d5-4a44-af90-882ebf52103f",
+                            Id = new Guid("f613f61e-22f2-4949-9d3b-360b7acb034b"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "65be86e8-f578-4ce7-8121-676fa6370cd6",
+                            ConcurrencyStamp = "81e0b078-cd7f-4a46-9210-53199e09aa8a",
                             Email = "admin@admin.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@ADMIN.COM",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAIAAYagAAAAEAGNX5Zahr4XzePoIheSoLWijGbmvVayzRCaamzIW73U4MOgCj0m+PjBPLlMyvJZlQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEOoyIVNSF4vv+HCZYEoO+UFS6ilLTSaSBOHWjbG0LzHAFO5HylmYjMMefvxMnMTc1Q==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "fa91ab0d-16f9-4cdd-828d-1020b29369b3",
+                            SecurityStamp = "6dacb27b-026d-4531-bbeb-8c81d5105a92",
                             TwoFactorEnabled = false,
                             UserName = "admin"
                         });
@@ -174,20 +180,18 @@ namespace Loan.DataAccess.Migrations
 
             modelBuilder.Entity("Loan.DataAccess.Models.Branch", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("uniqueidentifier");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("AddressId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("AddressId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("MerchantId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("MerchantId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("ModifiedDate")
                         .HasColumnType("datetime2");
@@ -197,8 +201,6 @@ namespace Loan.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AddressId");
-
                     b.HasIndex("MerchantId");
 
                     b.ToTable("Branches");
@@ -206,11 +208,9 @@ namespace Loan.DataAccess.Migrations
 
             modelBuilder.Entity("Loan.DataAccess.Models.CarouselItem", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -240,14 +240,12 @@ namespace Loan.DataAccess.Migrations
 
             modelBuilder.Entity("Loan.DataAccess.Models.Category", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("uniqueidentifier");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("BranchId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("BranchId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -261,11 +259,11 @@ namespace Loan.DataAccess.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("ParentCategoryId")
-                        .HasColumnType("int");
+                    b.Property<Guid?>("ParentCategoryId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int?>("ParentId")
-                        .HasColumnType("int");
+                    b.Property<Guid?>("ParentId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -276,11 +274,9 @@ namespace Loan.DataAccess.Migrations
 
             modelBuilder.Entity("Loan.DataAccess.Models.Customer", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -303,29 +299,27 @@ namespace Loan.DataAccess.Migrations
                     b.Property<string>("Phone")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UserId1")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId1");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Customers");
                 });
 
             modelBuilder.Entity("Loan.DataAccess.Models.Employee", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("uniqueidentifier");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<Guid>("BranchId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("BranchId")
-                        .HasColumnType("int");
+                    b.Property<Guid?>("BranchId1")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -342,37 +336,37 @@ namespace Loan.DataAccess.Migrations
                     b.Property<string>("Position")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UserId1")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
                     b.HasIndex("BranchId");
 
-                    b.HasIndex("UserId1");
+                    b.HasIndex("BranchId1");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Employees");
                 });
 
             modelBuilder.Entity("Loan.DataAccess.Models.Loan", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("CustomerId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("CustomerId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("EmployeeId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("EmployeeId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("EmployeeId1")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("ModifiedDate")
                         .HasColumnType("datetime2");
@@ -395,22 +389,22 @@ namespace Loan.DataAccess.Migrations
 
                     b.HasIndex("EmployeeId");
 
+                    b.HasIndex("EmployeeId1");
+
                     b.ToTable("Loans");
                 });
 
             modelBuilder.Entity("Loan.DataAccess.Models.LoanItem", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("LoanId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("LoanId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("ModifiedDate")
                         .HasColumnType("datetime2");
@@ -418,8 +412,8 @@ namespace Loan.DataAccess.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
@@ -433,15 +427,48 @@ namespace Loan.DataAccess.Migrations
                     b.ToTable("LoanItems");
                 });
 
+            modelBuilder.Entity("Loan.DataAccess.Models.Media", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ContentType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("FileName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FilePath")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("ModifiedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("OwnerId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Medias");
+                });
+
             modelBuilder.Entity("Loan.DataAccess.Models.Merchant", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("uniqueidentifier");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<string>("ActivationToken")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("BusinessLicensePath")
+                    b.Property<DateTime>("ActivationTokenExpiry")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("BusinessLicenseFileId")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedDate")
@@ -449,6 +476,9 @@ namespace Loan.DataAccess.Migrations
 
                     b.Property<int>("CurrentStep")
                         .HasColumnType("int");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("ModifiedDate")
                         .HasColumnType("datetime2");
@@ -462,8 +492,8 @@ namespace Loan.DataAccess.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -474,11 +504,9 @@ namespace Loan.DataAccess.Migrations
 
             modelBuilder.Entity("Loan.DataAccess.Models.Payment", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<decimal>("Amount")
                         .HasColumnType("decimal(18,2)");
@@ -486,8 +514,8 @@ namespace Loan.DataAccess.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("LoanId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("LoanId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("ModifiedDate")
                         .HasColumnType("datetime2");
@@ -504,17 +532,15 @@ namespace Loan.DataAccess.Migrations
 
             modelBuilder.Entity("Loan.DataAccess.Models.Product", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Brand")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("CategoryId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("CategoryId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -541,7 +567,7 @@ namespace Loan.DataAccess.Migrations
                     b.ToTable("Products");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -555,9 +581,8 @@ namespace Loan.DataAccess.Migrations
                     b.Property<string>("ClaimValue")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("RoleId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -566,7 +591,7 @@ namespace Loan.DataAccess.Migrations
                     b.ToTable("AspNetRoleClaims", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -580,9 +605,8 @@ namespace Loan.DataAccess.Migrations
                     b.Property<string>("ClaimValue")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -591,7 +615,7 @@ namespace Loan.DataAccess.Migrations
                     b.ToTable("AspNetUserClaims", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
                 {
                     b.Property<string>("LoginProvider")
                         .HasColumnType("nvarchar(450)");
@@ -602,9 +626,8 @@ namespace Loan.DataAccess.Migrations
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("LoginProvider", "ProviderKey");
 
@@ -613,13 +636,13 @@ namespace Loan.DataAccess.Migrations
                     b.ToTable("AspNetUserLogins", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
                 {
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("RoleId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("UserId", "RoleId");
 
@@ -630,15 +653,15 @@ namespace Loan.DataAccess.Migrations
                     b.HasData(
                         new
                         {
-                            UserId = "1380281e-e7d5-4a44-af90-882ebf52103f",
-                            RoleId = "9c5098b3-d0d4-49c2-a59e-7ea06d289711"
+                            UserId = new Guid("f613f61e-22f2-4949-9d3b-360b7acb034b"),
+                            RoleId = new Guid("ec7b8465-68ea-4eed-8089-ec4481334749")
                         });
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
                 {
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("LoginProvider")
                         .HasColumnType("nvarchar(450)");
@@ -654,21 +677,24 @@ namespace Loan.DataAccess.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Loan.DataAccess.Models.Branch", b =>
+            modelBuilder.Entity("Loan.DataAccess.Models.Address", b =>
                 {
-                    b.HasOne("Loan.DataAccess.Models.Address", "Address")
-                        .WithMany()
-                        .HasForeignKey("AddressId")
+                    b.HasOne("Loan.DataAccess.Models.Branch", "Branch")
+                        .WithOne("Address")
+                        .HasForeignKey("Loan.DataAccess.Models.Address", "BranchId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("Branch");
+                });
+
+            modelBuilder.Entity("Loan.DataAccess.Models.Branch", b =>
+                {
                     b.HasOne("Loan.DataAccess.Models.Merchant", "Merchant")
                         .WithMany("Branches")
                         .HasForeignKey("MerchantId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Address");
 
                     b.Navigation("Merchant");
                 });
@@ -686,7 +712,9 @@ namespace Loan.DataAccess.Migrations
                 {
                     b.HasOne("Loan.DataAccess.Models.AppUser", "User")
                         .WithMany()
-                        .HasForeignKey("UserId1");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("User");
                 });
@@ -694,14 +722,20 @@ namespace Loan.DataAccess.Migrations
             modelBuilder.Entity("Loan.DataAccess.Models.Employee", b =>
                 {
                     b.HasOne("Loan.DataAccess.Models.Branch", "Branch")
-                        .WithMany("Employees")
+                        .WithMany()
                         .HasForeignKey("BranchId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("Loan.DataAccess.Models.Branch", null)
+                        .WithMany("Employees")
+                        .HasForeignKey("BranchId1");
 
                     b.HasOne("Loan.DataAccess.Models.AppUser", "User")
                         .WithMany()
-                        .HasForeignKey("UserId1");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Branch");
 
@@ -717,10 +751,14 @@ namespace Loan.DataAccess.Migrations
                         .IsRequired();
 
                     b.HasOne("Loan.DataAccess.Models.Employee", "Employee")
-                        .WithMany("Loans")
+                        .WithMany()
                         .HasForeignKey("EmployeeId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("Loan.DataAccess.Models.Employee", null)
+                        .WithMany("Loans")
+                        .HasForeignKey("EmployeeId1");
 
                     b.Navigation("Customer");
 
@@ -750,7 +788,9 @@ namespace Loan.DataAccess.Migrations
                 {
                     b.HasOne("Loan.DataAccess.Models.AppUser", "User")
                         .WithMany()
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("User");
                 });
@@ -777,7 +817,7 @@ namespace Loan.DataAccess.Migrations
                     b.Navigation("Category");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
                     b.HasOne("Loan.DataAccess.Models.AppRole", null)
                         .WithMany()
@@ -786,7 +826,7 @@ namespace Loan.DataAccess.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
                 {
                     b.HasOne("Loan.DataAccess.Models.AppUser", null)
                         .WithMany()
@@ -795,7 +835,7 @@ namespace Loan.DataAccess.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
                 {
                     b.HasOne("Loan.DataAccess.Models.AppUser", null)
                         .WithMany()
@@ -804,7 +844,7 @@ namespace Loan.DataAccess.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
                 {
                     b.HasOne("Loan.DataAccess.Models.AppRole", null)
                         .WithMany()
@@ -819,7 +859,7 @@ namespace Loan.DataAccess.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
                 {
                     b.HasOne("Loan.DataAccess.Models.AppUser", null)
                         .WithMany()
@@ -830,6 +870,8 @@ namespace Loan.DataAccess.Migrations
 
             modelBuilder.Entity("Loan.DataAccess.Models.Branch", b =>
                 {
+                    b.Navigation("Address");
+
                     b.Navigation("Employees");
                 });
 

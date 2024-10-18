@@ -17,7 +17,7 @@ public class CustomUserClaimsPrincipalFactory : UserClaimsPrincipalFactory<AppUs
     protected override async Task<ClaimsIdentity> GenerateClaimsAsync(AppUser user)
     {
         var identity = await base.GenerateClaimsAsync(user);
-        identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, user.Id));
+        identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()));
 
         var roles = await UserManager.GetRolesAsync(user);
         foreach (var role in roles)

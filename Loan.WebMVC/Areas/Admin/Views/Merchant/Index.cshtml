@@ -1,0 +1,195 @@
+@using Loan.DataAccess.Models
+@model List<MerchantDto>
+
+@{
+    ViewData["Title"] = "Merchants";
+}
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Merchants</h4>
+                <p class="card-description">
+                    Manage your merchants effectively.
+                </p>
+                <a href="@Url.Action("Create", "Merchant")" class="btn btn-success mb-3">
+                    <i class="fas fa-plus"></i> Create New Merchant
+                </a>
+                <div class="table-responsive">
+                    <table id="merchantsTable" class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Merchant Name</th>
+                                <th>Email</th>
+                                <th>Status</th>
+                                <th>Business License</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null && Model.Any())
+                            {
+                                foreach (var merchant in Model)
+                                {
+                                    <tr>
+                                        <td>@merchant.Id</td>
+                                        <td>@merchant.Name</td>
+                                        <td>@merchant.Email</td>
+                                        <td>@merchant.Status.ToString()</td>
+                                        <td>
+                                            <button type="button" class="btn btn-primary btn-sm" 
+                                                    data-toggle="modal" data-target="#documentModal" 
+                                                    data-fileid="@merchant.BusinessLicenseFileId" 
+                                                    data-filename="@merchant.BusinessLicense?.FileName" 
+                                                    data-filetype="@merchant.BusinessLicense?.ContentType"
+                                                    aria-label="View Business License Document">
+                                                <i class="fas fa-eye"></i> View Document
+                                            </button>
+                                        </td>
+                                        <td>
+                                            <div class="btn-group" role="group" aria-label="Actions">
+                                                @* Controls based on status *@
+                                                @if (merchant.Status == MerchantStatus.AwaitingApproval)
+                                                {
+                                                    <a href="@Url.Action("ApproveApplication", "Merchant", new { merchantId = merchant.Id })" 
+                                                       class="btn btn-success btn-sm me-1" 
+                                                       title="Approve" data-toggle="tooltip" data-placement="top">
+                                                        <i class="fas fa-check"></i>
+                                                    </a>
+                                                    <a href="@Url.Action("RejectApplication", "Merchant", new { merchantId = merchant.Id })" 
+                                                       class="btn btn-danger btn-sm" 
+                                                       title="Reject" data-toggle="tooltip" data-placement="top">
+                                                        <i class="fas fa-times"></i>
+                                                    </a>
+                                                }
+                                                else if (merchant.Status == MerchantStatus.Active)
+                                                {
+                                                    <a href="@Url.Action("Edit", "Merchant", new { id = merchant.Id })" 
+                                                       class="btn btn-primary btn-sm me-1" 
+                                                       title="Edit Merchant" data-toggle="tooltip" data-placement="top">
+                                                        <i class="fas fa-edit"></i>
+                                                    </a>
+                                                    <form asp-action="Delete" asp-controller="Merchant" asp-route-id="@merchant.Id" method="post" class="d-inline">
+                                                        @Html.AntiForgeryToken()
+                                                        <button type="submit" class="btn btn-danger btn-sm" 
+                                                                onclick="return confirm('Are you sure you want to delete this merchant?');" 
+                                                                title="Delete Merchant" data-toggle="tooltip" data-placement="top">
+                                                            <i class="fas fa-trash-alt"></i>
+                                                        </button>
+                                                    </form>
+                                                }
+                                                else
+                                                {
+                                                    <span class="text-muted">No actions available</span>
+                                                }
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="7" class="text-center">No merchants found.</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* Document Modal *@
+<div class="modal fade" id="documentModal" tabindex="-1" role="dialog" aria-labelledby="documentModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        @* Use modal-xl for extra large modal *@
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Business License Document</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" aria-hidden="true">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="documentContent" style="width: 100%; height: 80vh;">
+                    @* Content will be loaded dynamically *@
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @* Include jQuery, Bootstrap, and DataTables scripts *@
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    
+    <script>
+        $(document).ready(function () {
+            // Initialize DataTable
+            $('#merchantsTable').DataTable({
+                "paging": true,
+                "lengthChange": true,
+                "searching": true,
+                "ordering": true,
+                "info": true,
+                "autoWidth": false,
+                "responsive": true
+            });
+
+            // Initialize Tooltips
+            $('[data-toggle="tooltip"]').tooltip();
+
+            // Handle the document modal
+            $('#documentModal').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget);
+                var fileId = button.data('fileid');
+                var fileName = button.data('filename');
+                var fileType = button.data('filetype');
+
+                var modal = $(this);
+                modal.find('.modal-title').text('Business License - ' + (fileName || 'Document'));
+
+                var contentDiv = modal.find('#documentContent');
+                contentDiv.empty();
+
+                if (!fileId) {
+                    contentDiv.text('No document available.');
+                    return;
+                }
+
+                var url = '';
+                if (fileType && fileType.startsWith('image/')) {
+                    url = '@Url.Action("GetImage", "Media")/' + fileId;
+                    var img = $('<img>').attr('src', url).css({ 'max-width': '100%', 'max-height': '100%' }).on('load', function () {
+                        // Image loaded successfully
+                    }).on('error', function () {
+                        contentDiv.append('<p class="text-danger">Failed to load image.</p>');
+                    });
+                    contentDiv.append(img);
+                } else if (fileType === 'application/pdf') {
+                    url = '@Url.Action("GetDocument", "Media")/' + fileId;
+                    var iframe = $('<iframe>').attr('src', url).css({ 'width': '100%', 'height': '100%' }).on('load', function () {
+                        // PDF loaded successfully
+                    }).on('error', function () {
+                        contentDiv.append('<p class="text-danger">Failed to load document.</p>');
+                    });
+                    contentDiv.append(iframe);
+                } else {
+                    contentDiv.text('Unsupported file type.');
+                }
+            });
+
+            // Clear content when modal is hidden
+            $('#documentModal').on('hidden.bs.modal', function () {
+                var contentDiv = $(this).find('#documentContent');
+                contentDiv.empty();
+            });
+        });
+    </script>
+}

@@ -2,6 +2,7 @@ using System.Reflection;
 using Loan.Application.DTOs;
 using Loan.Application.Mailing;
 using Loan.Application.MappingProfiles;
+using Loan.Application.MimeServer;
 using Loan.Application.Services;
 using Loan.Application.Services.Abstraction;
 using Loan.DataAccess.Models;
@@ -23,6 +24,7 @@ public static class ServiceCollectionExtensions
         services.AddTransient<IMailService, MailService>();
 
         services.AddScoped<IUserService, UserService>();
+        services.AddScoped<IMediaService, MediaService>();
         services.AddScoped<IMerchantService, MerchantService>();
         services.AddScoped<IBranchService, BranchService>();
         services.AddScoped<ICategoryService, CategoryService>();

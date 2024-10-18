@@ -9,10 +9,13 @@ public interface IUserService
     Task<UserDto> RegisterAsync(UserRegisterDto registerDto);
     Task<UserDto> RegisterAsDraftAsync(UserDto registerDto);
     Task<List<UserDto>> GetAllAsync();
-    Task AddUserToRoleAsync(string userId, string role);
-    Task<bool> IsUserInRoleAsync(string userId, string role);
-    Task<UserDto> GetUserByIdAsync(string userId);
+    Task AddUserToRoleAsync(Guid userId, string role);
+    Task<bool> IsUserInRoleAsync(Guid userId, string role);
+    Task<UserDto> GetUserByIdAsync(Guid userId);
     Task<UserDto> GetUserByEmailAsync(string email);
     Task ResetPasswordAsync(UserDto user, string resetToken, string password);
     Task<string> GeneratePasswordResetTokenAsync(UserDto user);
+    Task<string> GenerateEmailConfirmationTokenAsync(UserDto createdUser);
+    Task<bool> ConfirmEmailAsync(Guid userId, string token);
+    Task SetPasswordAsync(Guid userId, string password);
 }

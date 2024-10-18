@@ -2,31 +2,9 @@
 
 @{
     ViewData["Title"] = "Apply as a Merchant";
-    Layout = null;
+
+    Layout = "_EmptyLayout";
 }
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8" />
-    <title>@ViewData["Title"] - EShopper</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="keywords" content="Free HTML Templates" />
-    <meta name="description" content="Free HTML Templates" />
-
-    <link href="~/img/favicon.ico" rel="icon" />
-
-    <link rel="preconnect" href="https://fonts.gstatic.com" />
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet" />
-
-    <link href="~/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet" />
-
-    <link href="~/css/style.css" rel="stylesheet" />
-</head>
-<body>
-
-@await Component.InvokeAsync("NToastNotify")
 
 <div class="container-fluid pt-5">
     <div class="row justify-content-center">
@@ -40,18 +18,18 @@
                         @Html.AntiForgeryToken()
                         <div class="form-group">
                             <label asp-for="Merchant.Name"></label>
-                            <input asp-for="Merchant.Name" class="form-control" />
+                            <input asp-for="Merchant.Name" class="form-control"/>
                             <span asp-validation-for="Merchant.Name" class="text-danger"></span>
                         </div>
                         <div class="form-group">
-                            <label asp-for="User.Email"></label>
-                            <input asp-for="User.Email" class="form-control" />
-                            <span asp-validation-for="Merchant.User.Email" class="text-danger"></span>
+                            <label asp-for="Merchant.Email"></label>
+                            <input asp-for="Merchant.Email" class="form-control"/>
+                            <span asp-validation-for="Merchant.Email" class="text-danger"></span>
                         </div>
 
                         <div class="form-group">
                             <label asp-for="Merchant.BusinessLicense"></label>
-                            <input asp-for="Merchant.BusinessLicense" type="file" class="form-control-file" />
+                            <input asp-for="Merchant.BusinessLicense" type="file" class="form-control-file"/>
                             <span asp-validation-for="Merchant.BusinessLicense" class="text-danger"></span>
                         </div>
                         <div class="form-group">
@@ -66,21 +44,3 @@
         </div>
     </div>
 </div>
-
-
-<a href="#" class="btn btn-primary back-to-top"><i class="fa fa-angle-double-up"></i></a>
-
-<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
-<script src="~/lib/easing/easing.min.js"></script>
-<script src="~/lib/owlcarousel/owl.carousel.min.js"></script>
-
-<script src="~/mail/jqBootstrapValidation.min.js"></script>
-<script src="~/mail/contact.js"></script>
-
-<script src="~/js/main.js"></script>
-
-
-</body>
-</html>
-

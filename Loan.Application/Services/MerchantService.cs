@@ -1,6 +1,7 @@
 using AutoMapper;
 using Loan.Application.DTOs;
 using Loan.Application.Mailing;
+using Loan.Application.MimeServer;
 using Loan.Application.Services.Abstraction;
 using Loan.DataAccess.Models;
 using Loan.DataAccess.Persistence;
@@ -13,16 +14,35 @@ public class MerchantService : GenericService<Merchant, MerchantDto>, IMerchantS
 {
     private readonly IUserService _userService;
     private readonly IMailService _mailService;
+    private readonly IMediaService _mediaService;
+    private readonly IConfiguration _configuration;
 
     public MerchantService(IAsyncRepository<Merchant, AppDbContext> repository, IMapper mapper,
-        IUserService userService, IMailService mailService) : base(repository,
+        IUserService userService, IMailService mailService, IMediaService mediaService,
+        IConfiguration configuration) : base(repository,
         mapper)
     {
         _userService = userService;
         _mailService = mailService;
+        _mediaService = mediaService;
+        _configuration = configuration;
     }
 
-    public async Task<MerchantDto> CreateAsync(MerchantDto merchantDto, string userId,
+    //HACK: Refactor this method. You can use proxies or smth like that to load media files
+    //TODO: Convert media model to DTO
+    public override async Task<List<MerchantDto>> GetAllAsync()
+    {
+        var merchants = await base.GetAllAsync();
+
+        foreach (var merchant in merchants)
+        {
+            merchant.BusinessLicense = await _mediaService.GetFileAsync(merchant.BusinessLicenseFileId);
+        }
+
+        return merchants;
+    }
+
+    public async Task<MerchantDto> CreateAsync(MerchantDto merchantDto, Guid userId,
         UserRegisterDto userDto = null)
     {
         if (merchantDto == null)
@@ -30,7 +50,7 @@ public class MerchantService : GenericService<Merchant, MerchantDto>, IMerchantS
             throw new ArgumentNullException(nameof(merchantDto));
         }
 
-        if (string.IsNullOrWhiteSpace(userId) && userDto == null)
+        if (userDto == null)
         {
             throw new ArgumentException("userId or userDto must be provided");
         }
@@ -69,28 +89,32 @@ public class MerchantService : GenericService<Merchant, MerchantDto>, IMerchantS
         return createdMerchant;
     }
 
-    public async Task<MerchantDto> ApplyAsync(MerchantDto merchant, UserDto user)
+    public async Task<MerchantDto> ApplyAsync(MerchantDto merchant)
     {
-        var existingUser = await _userService.GetUserByEmailAsync(user.Email);
+        var existingUser = await _userService.GetUserByEmailAsync(merchant.Email);
 
         if (existingUser != null)
         {
             throw new ArgumentException("Email is already registered.");
         }
 
-        var registeredUser = await _userService.RegisterAsDraftAsync(user);
+        var registeredUser = await _userService.RegisterAsDraftAsync(new UserDto()
+        {
+            Email = merchant.Email,
+            UserName = merchant.Email,
+        });
 
         await _userService.AddUserToRoleAsync(registeredUser.Id, "Merchant");
 
         var merchantToCreate = new Merchant
         {
             Name = merchant.Name,
+            Email = merchant.Email,
             UserId = registeredUser.Id,
             CreatedDate = DateTime.UtcNow,
             ModifiedDate = DateTime.UtcNow,
             Status = MerchantStatus.AwaitingApproval,
             CurrentStep = 0,
-            BusinessLicensePath = merchant.BusinessLicense.Name,
             RegistrationNotes = merchant.RegistrationNotes,
         };
 
@@ -98,10 +122,11 @@ public class MerchantService : GenericService<Merchant, MerchantDto>, IMerchantS
 
         await _userService.AddUserToRoleAsync(registeredUser.Id, "Merchant");
 
-        if (merchant.BusinessLicense is { Length: > 0 })
+        if (merchant.BusinessLicense.File is { Length: > 0 })
         {
-            var uniqueFileName = $"{registeredUser.Id}_{Path.GetFileName(merchant.BusinessLicense.FileName)}";
-            createdMerchant.BusinessLicensePath = $"/uploads/licenses/{uniqueFileName}";
+            var fileId = await _mediaService.UploadFileAsync(merchant.BusinessLicense, createdMerchant.Id);
+
+            createdMerchant.BusinessLicenseId = fileId;
             await _repository.UpdateAsync(createdMerchant);
         }
 
@@ -112,12 +137,12 @@ public class MerchantService : GenericService<Merchant, MerchantDto>, IMerchantS
                       "Best Regards,\n" +
                       "Loan App";
 
-        await _mailService.SendEmailAsync(user.Email, subject, message);
+        await _mailService.SendEmailAsync(merchant.Email, subject, message);
 
         return _mapper.Map<MerchantDto>(createdMerchant);
     }
 
-    public async Task<bool> ValidateActivationTokenAsync(int merchantId, string token)
+    public async Task<bool> ValidateActivationTokenAsync(Guid merchantId, string token)
     {
         var merchant = await _repository.GetAsync(m => m.Id == merchantId);
 
@@ -134,7 +159,7 @@ public class MerchantService : GenericService<Merchant, MerchantDto>, IMerchantS
         return true;
     }
 
-    public async Task<MerchantDto> CompleteStepOneAsync(int merchantId, string password)
+    public async Task<MerchantDto> CompleteStepOneAsync(Guid merchantId, string password)
     {
         var merchant = await _repository.GetAsync(m => m.Id == merchantId);
 
@@ -143,21 +168,34 @@ public class MerchantService : GenericService<Merchant, MerchantDto>, IMerchantS
             throw new ArgumentException("Merchant does not exist.");
         }
 
-        if (merchant.CurrentStep != 0)
+        // if (merchant.CurrentStep != 0)
+        // {
+        //     throw new InvalidOperationException("Invalid step.");
+        // }
+
+        if (merchant.Status == MerchantStatus.Active)
         {
-            throw new InvalidOperationException("Invalid step.");
+            throw new InvalidOperationException("Merchant is already active.");
         }
 
         var user = await _userService.GetUserByIdAsync(merchant.UserId);
+
         if (user == null)
         {
             throw new ArgumentException("User does not exist.");
         }
-        
+
         string resetToken = await _userService.GeneratePasswordResetTokenAsync(user);
-        
+
         await _userService.ResetPasswordAsync(user, resetToken, password);
 
+        await _userService.LoginAsync(new UserLoginDto()
+        {
+            Username = user.Email,
+            IsPersistent = true,
+            LockoutOnFailure = false,
+            Password = password
+        });
 
         merchant.CurrentStep = 1;
         merchant.ModifiedDate = DateTime.UtcNow;
@@ -166,7 +204,7 @@ public class MerchantService : GenericService<Merchant, MerchantDto>, IMerchantS
         return _mapper.Map<MerchantDto>(merchant);
     }
 
-    public async Task<MerchantDto> CompleteStepTwoAsync(int merchantId, MerchantDto merchantDto)
+    public async Task<MerchantDto> CompleteStepTwoAsync(Guid merchantId, MerchantDto merchantDto)
     {
         var merchant = await _repository.GetAsync(m => m.Id == merchantId);
 
@@ -180,12 +218,24 @@ public class MerchantService : GenericService<Merchant, MerchantDto>, IMerchantS
             throw new InvalidOperationException("Invalid step.");
         }
 
+        if (merchant.Status == MerchantStatus.Active)
+        {
+            throw new InvalidOperationException("Merchant is already active.");
+        }
+
         merchant.Name = merchantDto.Name;
         merchant.ModifiedDate = DateTime.UtcNow;
 
         merchant.CurrentStep = 2;
         merchant.Status = MerchantStatus.Active;
         await _repository.UpdateAsync(merchant);
+
+        return _mapper.Map<MerchantDto>(merchant);
+    }
+
+    public async Task<MerchantDto> GetByUserIdAsync(Guid userId)
+    {
+        var merchant = await _repository.GetAsync(m => m.UserId == userId);
 
         return _mapper.Map<MerchantDto>(merchant);
     }
@@ -197,7 +247,7 @@ public class MerchantService : GenericService<Merchant, MerchantDto>, IMerchantS
         return _mapper.Map<List<MerchantDto>>(merchants);
     }
 
-    public async Task<MerchantDto> RejectApplication(int merchantId)
+    public async Task<MerchantDto> RejectApplication(Guid merchantId)
     {
         var merchantToUpdate = await _repository.GetAsync(m => m.Id == merchantId);
 
@@ -227,7 +277,7 @@ public class MerchantService : GenericService<Merchant, MerchantDto>, IMerchantS
         return _mapper.Map<MerchantDto>(merchantToUpdate);
     }
 
-    public async Task<MerchantDto> ApproveApplication(int merchantId)
+    public async Task<MerchantDto> ApproveApplication(Guid merchantId)
     {
         var merchantToUpdate = await _repository.GetAsync(m => m.Id == merchantId);
 
@@ -251,8 +301,8 @@ public class MerchantService : GenericService<Merchant, MerchantDto>, IMerchantS
 
         await _repository.UpdateAsync(merchantToUpdate);
 
-
-        var activationLink = $"/Merchant/Activate?merchantId={merchantToUpdate.Id}&token={activationToken}";
+        var baseUrl = _configuration["AppSettings:BaseUrl"];
+        var activationLink = $"{baseUrl}/Merchant/Activate?merchantId={merchantToUpdate.Id}&token={activationToken}";
 
         var subject = "Activate Your Merchant Account";
         var message = $"Dear {merchantToUpdate.Name},\n\n" +

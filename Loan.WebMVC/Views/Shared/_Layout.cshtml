@@ -18,6 +18,8 @@
     <link href="~/css/style.css" rel="stylesheet" />
 </head>
 <body>
+@await Component.InvokeAsync("NToastNotify")
+
 @await Html.PartialAsync("Partials/_Topbar")
 
 @await Html.PartialAsync("Partials/_Navbar")

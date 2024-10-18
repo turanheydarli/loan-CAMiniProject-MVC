@@ -11,7 +11,7 @@ public class MerchantValidator : AbstractValidator<MerchantDto>
         RuleFor(x => x.User.Email).NotEmpty().EmailAddress();
         RuleFor(x => x.User.PhoneNumber).Matches(@"^\+?\d{10,15}$");
 
-        RuleFor(x => x.BusinessLicense)
+        RuleFor(x => x.BusinessLicense.File)
             .NotNull().WithMessage("Please upload your Business License.")
             .Must(file =>
                 file == null || (file.ContentType == "application/pdf" || file.ContentType.StartsWith("image/")))

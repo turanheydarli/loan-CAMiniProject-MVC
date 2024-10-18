@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Loan.DataAccess.Persistence;
 
-public class AppDbContext : IdentityDbContext<AppUser, AppRole, string>
+public class AppDbContext : IdentityDbContext<AppUser, AppRole, Guid>
 {
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     {
@@ -22,6 +22,8 @@ public class AppDbContext : IdentityDbContext<AppUser, AppRole, string>
     public DbSet<Payment> Payments { get; set; }
     public DbSet<CarouselItem> CarouselItems { get; set; }
     public DbSet<Product> Products { get; set; }
+    public DbSet<Media> Medias { get; set; }
+
     protected override void OnModelCreating(ModelBuilder builder)
     {
         builder.ApplyConfigurationsFromAssembly(Assembly.GetAssembly(typeof(AppDbContext)) ??
@@ -30,3 +32,5 @@ public class AppDbContext : IdentityDbContext<AppUser, AppRole, string>
         base.OnModelCreating(builder);
     }
 }
+
+//  dotnet ef migrations add MerchandFileFieldUpdated --project ./Loan.DataAccess --startup-project ./Loan.WebMVC/  

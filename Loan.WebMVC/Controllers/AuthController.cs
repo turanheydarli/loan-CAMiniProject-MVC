@@ -75,7 +75,7 @@ public class AuthController : Controller
             Email = model.Email,
             ConfirmPassword = model.ConfirmPassword,
             Password = model.Password,
-            Username = model.Username,
+            UserName = model.Username,
         });
 
         if (user != null)

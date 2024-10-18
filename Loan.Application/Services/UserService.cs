@@ -31,7 +31,7 @@ public class UserService : IUserService
     {
         AppUser user = new AppUser()
         {
-            UserName = registerDto.Username,
+            UserName = registerDto.UserName,
             Email = registerDto.Email,
         };
 
@@ -85,9 +85,9 @@ public class UserService : IUserService
         }).ToList();
     }
 
-    public async Task AddUserToRoleAsync(string userId, string role)
+    public async Task AddUserToRoleAsync(Guid userId, string role)
     {
-        var user = await _userManager.FindByIdAsync(userId);
+        var user = await _userManager.FindByIdAsync(userId.ToString());
 
         if (user == null)
         {
@@ -108,9 +108,9 @@ public class UserService : IUserService
         }
     }
 
-    public async Task<bool> IsUserInRoleAsync(string userId, string role)
+    public async Task<bool> IsUserInRoleAsync(Guid userId, string role)
     {
-        var user = await _userManager.FindByIdAsync(userId);
+        var user = await _userManager.FindByIdAsync(userId.ToString());
 
         if (user == null)
         {
@@ -120,9 +120,9 @@ public class UserService : IUserService
         return await _userManager.IsInRoleAsync(user, role);
     }
 
-    public async Task<UserDto> GetUserByIdAsync(string userId)
+    public async Task<UserDto> GetUserByIdAsync(Guid userId)
     {
-        var user = await _userManager.FindByIdAsync(userId);
+        var user = await _userManager.FindByIdAsync(userId.ToString());
 
         if (user == null)
         {
@@ -156,7 +156,7 @@ public class UserService : IUserService
 
     public async Task ResetPasswordAsync(UserDto user, string resetToken, string password)
     {
-        var userToResrt = await _userManager.FindByIdAsync(user.Id);
+        var userToResrt = await _userManager.FindByIdAsync(user.Id.ToString());
 
         if (userToResrt == null)
         {
@@ -168,7 +168,7 @@ public class UserService : IUserService
 
     public async Task<string> GeneratePasswordResetTokenAsync(UserDto userDto)
     {
-        var user = await _userManager.FindByIdAsync(userDto.Id);
+        var user = await _userManager.FindByIdAsync(userDto.Id.ToString());
 
         if (user == null)
         {
@@ -176,6 +176,54 @@ public class UserService : IUserService
         }
 
         return await _userManager.GeneratePasswordResetTokenAsync(user);
+    }
+
+    public async Task<string> GenerateEmailConfirmationTokenAsync(UserDto createdUser)
+    {
+        var user = await _userManager.FindByIdAsync(createdUser.Id.ToString());
+
+        if (user == null)
+        {
+            throw new ApplicationException("User not found.");
+        }
+
+        return await _userManager.GenerateEmailConfirmationTokenAsync(user);
+    }
+
+    public async Task<bool> ConfirmEmailAsync(Guid userId, string token)
+    {
+        var user = await _userManager.FindByIdAsync(userId.ToString());
+
+        if (user == null)
+        {
+            throw new Exception("User not found.");
+        }
+
+        var result = await _userManager.ConfirmEmailAsync(user, token);
+
+        if (!result.Succeeded)
+        {
+            throw new IdentityException(result.Errors);
+        }
+
+        return result.Succeeded;
+    }
+
+    public async Task SetPasswordAsync(Guid userId, string password)
+    {
+        var user = await _userManager.FindByIdAsync(userId.ToString());
+
+        if (user == null)
+        {
+            throw new Exception("User not found.");
+        }
+
+        var result = await _userManager.AddPasswordAsync(user, password);
+
+        if (!result.Succeeded)
+        {
+            throw new IdentityException(result.Errors);
+        }
     }
 
     public async Task<UserLoginDto> LoginAsync(UserLoginDto loginDto)

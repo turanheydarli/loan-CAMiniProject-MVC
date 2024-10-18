@@ -3,8 +3,8 @@ namespace Loan.DataAccess.Models;
 public class Category : BaseEntity
 {
     public string Name { get; set; }
-    public int? ParentId { get; set; }
-    public int BranchId { get; set; }
+    public Guid? ParentId { get; set; }
+    public Guid BranchId { get; set; }
 
     public int Depth { get; set; }
 

@@ -7,7 +7,7 @@ public class Customer : BaseEntity
     public string Occupation { get; set; }
     public string Phone { get; set; }
     public string Email { get; set; }
-    public int UserId { get; set; }
+    public Guid UserId { get; set; }
 
     public AppUser User { get; set; }
     public ICollection<Loan> Loans { get; set; } 

@@ -33,7 +33,7 @@ public class GenericService<TEntity, TDto> : IGenericService<TEntity, TDto>
         return _mapper.Map<TDto>(createdBranch);
     }
 
-    public virtual async Task<TDto> GetByIdAsync(int entityId)
+    public virtual async Task<TDto> GetByIdAsync(Guid entityId)
     {
         var entity = await _repository.GetAsync(m => m.Id == entityId);
 
@@ -68,7 +68,7 @@ public class GenericService<TEntity, TDto> : IGenericService<TEntity, TDto>
         return _mapper.Map<TDto>(entityToUpdate);
     }
 
-    public virtual async Task DeleteAsync(int entityId)
+    public virtual async Task DeleteAsync(Guid entityId)
     {
         var entityToDelete = await _repository.GetAsync(m => m.Id == entityId);
 

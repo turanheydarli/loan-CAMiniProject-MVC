@@ -5,9 +5,9 @@ namespace Loan.DataAccess.Persistence.Configurations;
 
 public static class IdentitySeedData
 {
-    public static readonly string AdminRoleId = Guid.NewGuid().ToString();
+    public static readonly Guid AdminRoleId = Guid.NewGuid();
 
-    public static readonly string AdminUserId = Guid.NewGuid().ToString();
+    public static readonly Guid AdminUserId = Guid.NewGuid();
 
     public static object[] GetRoles()
     {
@@ -45,11 +45,11 @@ public static class IdentitySeedData
         return new AppUser[] { adminUser };
     }
 
-    public static IdentityUserRole<string>[] GetUserRoles()
+    public static IdentityUserRole<Guid>[] GetUserRoles()
     {
-        return new IdentityUserRole<string>[]
+        return new IdentityUserRole<Guid>[]
         {
-            new IdentityUserRole<string>
+            new IdentityUserRole<Guid>
             {
                 UserId = AdminUserId,
                 RoleId = AdminRoleId

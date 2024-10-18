@@ -12,6 +12,10 @@ namespace Loan.Application.Exceptions
             IdentityErrors = errors;
         }
     }
+    public class StepAlreadyCompletedException : Exception
+    {
+       
+    }
 
     public class UserNotFoundException : Exception
     {

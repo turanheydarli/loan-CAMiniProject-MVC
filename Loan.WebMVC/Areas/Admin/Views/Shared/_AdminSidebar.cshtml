@@ -18,18 +18,66 @@
                     <ul class="nav flex-column sub-menu">
 
                         <li class="nav-item">
-                            <a class="nav-link" href="@Url.Action("Create", "Merchants")">Create</a>
+                            <a class="nav-link" href="@Url.Action("Create", "Merchant", new { Area = "Admin" })">Create</a>
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link" href="@Url.Action("Index", "Merchants")">List</a>
+                            <a class="nav-link" href="@Url.Action("Index", "Merchant", new { Area = "Admin" })">List</a>
                         </li>
                     </ul>
                 </div>
             </li>
         }
+
+        @if (User.IsInRole("Merchant"))
+        {
+            <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="collapse" href="#branches-submenu" aria-expanded="false" aria-controls="branches-submenu">
+                    <i class="mdi mdi-circle-outline menu-icon"></i>
+                    <span class="menu-title">Branches</span>
+                    <i class="menu-arrow"></i>
+                </a>
+                <div class="collapse" id="branches-submenu">
+                    <ul class="nav flex-column sub-menu">
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="@Url.Action("Create", "Branch", new { Area = "Admin" })">Create</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="@Url.Action("Index", "Branch", new { Area = "Admin" })">List</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+        }
+
+        @if (User.IsInRole("Merchant"))
+        {
+            <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="collapse" href="#employees-submenu" aria-expanded="false" aria-controls="employees-submenu">
+                    <i class="mdi mdi-circle-outline menu-icon"></i>
+                    <span class="menu-title">Employees</span>
+                    <i class="menu-arrow"></i>
+                </a>
+                <div class="collapse" id="employees-submenu">
+                    <ul class="nav flex-column sub-menu">
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="@Url.Action("Create", "Employee", new { Area = "Admin" })">Create</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="@Url.Action("Index", "Employee", new { Area = "Admin" })">List</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+        }
+
+
         <li class="nav-item">
-            <a class="nav-link" href="@Url.Action("Settings", "Dashboard")">
+            <a class="nav-link" href="@Url.Action("Settings", "Dashboard", new { Area = "Admin" })">
                 <i class="mdi mdi-settings menu-icon"></i>
                 <span class="menu-title">Settings</span>
             </a>
