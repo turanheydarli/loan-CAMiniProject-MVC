@@ -51,7 +51,6 @@ public class GenericService<TEntity, TDto> : IGenericService<TEntity, TDto>
         var allEntities = await _repository.GetListAsync();
 
         return _mapper.Map<List<TDto>>(allEntities);
-        ;
     }
 
     public virtual async Task<TDto> UpdateAsync(TDto entity)

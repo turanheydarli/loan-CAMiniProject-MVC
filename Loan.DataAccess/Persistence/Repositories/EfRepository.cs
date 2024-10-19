@@ -37,11 +37,12 @@ public class EfRepository<TEntity, TContext> : IRepository<TEntity, TContext>, I
     }
 
     public IList<TEntity?> GetList(Expression<Func<TEntity?, bool>> predicate = null,
-        Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null)
+        Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null, bool isTracking = false)
     {
         IQueryable<TEntity?> queryable = Query();
         if (include != null) queryable = include(queryable);
         if (predicate != null) queryable = queryable.Where(predicate);
+        if (!isTracking) queryable = queryable.AsNoTracking();
 
         return queryable.ToList();
     }
@@ -77,11 +78,12 @@ public class EfRepository<TEntity, TContext> : IRepository<TEntity, TContext>, I
     }
 
     public async Task<IList<TEntity>> GetListAsync(Expression<Func<TEntity?, bool>> predicate = null,
-        Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null)
+        Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null, bool isTracking = false)
     {
         IQueryable<TEntity?> queryable = Query();
         if (include != null) queryable = include(queryable);
         if (predicate != null) queryable = queryable.Where(predicate);
+        if (!isTracking) queryable = queryable.AsNoTracking();
 
         return await queryable.ToListAsync();
     }
@@ -103,6 +105,13 @@ public class EfRepository<TEntity, TContext> : IRepository<TEntity, TContext>, I
     public async Task<TEntity> DeleteAsync(TEntity entity)
     {
         Context.Entry(entity).State = EntityState.Deleted;
+        await Context.SaveChangesAsync();
+        return entity;
+    }
+
+    public async Task<TEntity> DetachAsync(TEntity entity)
+    {
+        Context.Entry(entity).State = EntityState.Detached;
         await Context.SaveChangesAsync();
         return entity;
     }

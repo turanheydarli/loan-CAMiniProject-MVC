@@ -5,6 +5,7 @@ namespace Loan.Application.Services.Abstraction;
 
 public interface IProductService : IGenericService<Product, ProductDto>
 {
+    Task<List<ProductDto>> GetAllTrendingProducts();
     Task AddProductImagesAsync(Guid productId, List<MediaDto> images);
     Task SetProductThumbnailAsync(Guid productId, MediaDto thumbnail);
 }

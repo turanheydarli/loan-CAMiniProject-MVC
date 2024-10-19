@@ -1,0 +1,19 @@
+@model List<Loan.Application.DTOs.MerchantDto>
+
+<div class="container-fluid py-5">
+    <div class="row px-xl-5">
+        <div class="col">
+            <div class="owl-carousel vendor-carousel">
+                @if (Model.Any())
+                {
+                    foreach (var vendor in Model)
+                    {
+                        <div class="vendor-item border p-4">
+                            <img src="@Url.Action("GetImage", "Media", new { fileId = vendor.ProfileImageId })" alt="@vendor.Name"/>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</div>

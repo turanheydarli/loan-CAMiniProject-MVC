@@ -11,11 +11,9 @@ public class Product : BaseEntity
 
     public Guid CategoryId { get; set; }
 
-    public Category Category { get; set; }
+    public virtual Category Category { get; set; }
 
-    public Media Thumbnail { get; set; }
+    public Guid ThumbnailId { get; set; }
 
-    public ICollection<Media> Images { get; set; }
-
-    public ICollection<LoanItem> LoanItems { get; set; }
+    public virtual ICollection<LoanItem> LoanItems { get; set; }
 }

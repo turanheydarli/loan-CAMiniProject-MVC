@@ -6,7 +6,7 @@ public class Branch : BaseEntity
     public Guid MerchantId { get; set; }
     public Guid AddressId { get; set; }
 
-    public Merchant Merchant { get; set; }
-    public Address Address { get; set; }
-    public ICollection<Employee> Employees { get; set; }  
+    public virtual Merchant Merchant { get; set; }
+    public virtual Address Address { get; set; }
+    public virtual ICollection<Employee> Employees { get; set; }  
 }

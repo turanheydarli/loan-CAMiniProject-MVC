@@ -4,7 +4,6 @@ using Loan.DataAccess.Models;
 using Loan.DataAccess.Persistence;
 using Loan.DataAccess.Persistence.Repositories;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 
 namespace Loan.Application.MimeServer;
 
@@ -23,7 +22,7 @@ public class MediaService : IMediaService
         _mapper = mapper;
     }
 
-    public async Task<Guid> UploadFileAsync(MediaDto mediaDto, Guid ownerId)
+    public async Task<Guid> UploadFileAsync(MediaDto mediaDto, OwnerType ownerType, Guid ownerId)
     {
         var file = mediaDto.File;
 
@@ -41,7 +40,11 @@ public class MediaService : IMediaService
 
         var uniqueFileName = $"{Guid.NewGuid()}{extension}";
 
-        var uploadsFolder = Path.Combine(_environment.ContentRootPath, "uploads");
+        var folderName = ownerType.ToString().ToLower();
+
+        var folderPath = Path.Combine("uploads", folderName);
+
+        var uploadsFolder = Path.Combine(_environment.ContentRootPath, folderPath);
         var filePath = Path.Combine(uploadsFolder, uniqueFileName);
 
         if (!Directory.Exists(uploadsFolder))
@@ -59,7 +62,7 @@ public class MediaService : IMediaService
             OwnerId = ownerId,
             FileName = file.FileName,
             ContentType = file.ContentType,
-            FilePath = $"/uploads/{uniqueFileName}",
+            FilePath = $"{Path.Combine(folderPath, uniqueFileName)}",
             CreatedDate = DateTime.UtcNow
         };
 

@@ -1,5 +1,9 @@
+using Loan.DataAccess.Persistence.Configurations;
+using Microsoft.EntityFrameworkCore;
+
 namespace Loan.DataAccess.Models;
 
+[EntityTypeConfiguration(typeof(CategoryConfiguration))]
 public class Category : BaseEntity
 {
     public string Name { get; set; }
@@ -8,8 +12,9 @@ public class Category : BaseEntity
 
     public int Depth { get; set; }
 
-    public Category ParentCategory { get; set; }
-    
-    public ICollection<Category> SubCategories { get; set; }
-    public ICollection<Product> Products { get; set; }
+    public virtual Category ParentCategory { get; set; }
+    public virtual Guid ThumbnailId { get; set; }
+
+    public virtual ICollection<Category> SubCategories { get; set; }
+    public virtual ICollection<Product> Products { get; set; }
 }

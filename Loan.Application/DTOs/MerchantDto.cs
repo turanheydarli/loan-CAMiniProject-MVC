@@ -12,11 +12,15 @@ public record MerchantDto : BaseDto
     public string Email { get; set; }
 
     public int CurrentStep { get; set; }
-    public Guid BusinessLicenseFileId { get; set; }
+    public Guid BusinessLicenseId { get; set; }
 
     public AppUser User { get; set; }
     public ICollection<Branch> Branches { get; set; }
 
     //TODO: Convert it to media DTO
     public MediaDto BusinessLicense { get; set; }
+    
+    public Guid ProfileImageId { get; set; }
+    public MediaDto ProfileImage { get; set; }
+    public MediaDto BannerImage { get; set; }
 }

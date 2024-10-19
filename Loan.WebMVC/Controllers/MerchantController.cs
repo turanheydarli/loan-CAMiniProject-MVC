@@ -34,7 +34,7 @@ public class MerchantController : Controller
 
             return View("ActivationError");
         }
-        
+
         var merchant = await _merchantService.GetByIdAsync(merchantId);
 
         if (merchant.Status == MerchantStatus.Active)
@@ -133,7 +133,12 @@ public class MerchantController : Controller
 
         await _merchantService.CompleteStepTwoAsync(model.MerchantId, new MerchantDto()
         {
-            Name = model.Name
+            Name = model.Name,
+        });
+
+        await _merchantService.SetProfileImageAsync(model.MerchantId, new MediaDto()
+        {
+            File = model.Logo,
         });
 
         return RedirectToAction("Index", "Dashboard", new { Area = "Admin" });
@@ -152,6 +157,11 @@ public class MerchantController : Controller
     {
         if (ModelState.IsValid)
         {
+            model.Merchant.BusinessLicense = new MediaDto()
+            {
+                File = model.BusinessLicenceFile
+            };
+
             await _merchantService.ApplyAsync(model.Merchant);
 
             _toastNotification.AddSuccessToastMessage($"Merchant {model.Merchant.Name} successfully applied");

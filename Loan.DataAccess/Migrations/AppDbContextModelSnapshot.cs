@@ -18,6 +18,9 @@ namespace Loan.DataAccess.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "8.0.8")
+                .HasAnnotation("Proxies:ChangeTracking", false)
+                .HasAnnotation("Proxies:CheckEquality", false)
+                .HasAnnotation("Proxies:LazyLoading", true)
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -87,8 +90,8 @@ namespace Loan.DataAccess.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("ec7b8465-68ea-4eed-8089-ec4481334749"),
-                            ConcurrencyStamp = "dca361b1-437b-43e6-8827-83f0243c3cf9",
+                            Id = new Guid("71e11f91-5e42-469d-a395-01b5b826b883"),
+                            ConcurrencyStamp = "1133a237-bf63-4c6d-9b82-d57345c9a8b4",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -162,17 +165,17 @@ namespace Loan.DataAccess.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("f613f61e-22f2-4949-9d3b-360b7acb034b"),
+                            Id = new Guid("9b14c6c1-9d29-4aac-b73f-60a849159c82"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "81e0b078-cd7f-4a46-9210-53199e09aa8a",
+                            ConcurrencyStamp = "7e40fdb3-c584-432e-b4dd-8856ad2b3e0f",
                             Email = "admin@admin.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@ADMIN.COM",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAIAAYagAAAAEOoyIVNSF4vv+HCZYEoO+UFS6ilLTSaSBOHWjbG0LzHAFO5HylmYjMMefvxMnMTc1Q==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEFg4VHQczu/QfdqpWYXovuuCqQRqjGe7v/CFE27nDrY4hurXra2nY0ZMAPQBb+akKw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "6dacb27b-026d-4531-bbeb-8c81d5105a92",
+                            SecurityStamp = "1e6e71d0-bb1f-4a99-b96c-2686646085e3",
                             TwoFactorEnabled = false,
                             UserName = "admin"
                         });
@@ -210,6 +213,9 @@ namespace Loan.DataAccess.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("BannerImageId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreatedDate")
@@ -265,6 +271,9 @@ namespace Loan.DataAccess.Migrations
                     b.Property<Guid?>("ParentId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid>("ThumbnailId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ParentCategoryId");
@@ -298,6 +307,9 @@ namespace Loan.DataAccess.Migrations
 
                     b.Property<string>("Phone")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("ProfileImageId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
@@ -415,6 +427,9 @@ namespace Loan.DataAccess.Migrations
                     b.Property<Guid>("ProductId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid?>("ProductId1")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
@@ -423,6 +438,8 @@ namespace Loan.DataAccess.Migrations
                     b.HasIndex("LoanId");
 
                     b.HasIndex("ProductId");
+
+                    b.HasIndex("ProductId1");
 
                     b.ToTable("LoanItems");
                 });
@@ -451,6 +468,9 @@ namespace Loan.DataAccess.Migrations
                     b.Property<Guid>("OwnerId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<int>("OwnerType")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.ToTable("Medias");
@@ -468,8 +488,11 @@ namespace Loan.DataAccess.Migrations
                     b.Property<DateTime>("ActivationTokenExpiry")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("BusinessLicenseFileId")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<Guid>("BannerImageId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("BusinessLicenseId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -485,6 +508,9 @@ namespace Loan.DataAccess.Migrations
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("ProfileImageId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("RegistrationNotes")
                         .HasColumnType("nvarchar(max)");
@@ -559,6 +585,9 @@ namespace Loan.DataAccess.Migrations
 
                     b.Property<int>("StockCount")
                         .HasColumnType("int");
+
+                    b.Property<Guid>("ThumbnailId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -653,8 +682,8 @@ namespace Loan.DataAccess.Migrations
                     b.HasData(
                         new
                         {
-                            UserId = new Guid("f613f61e-22f2-4949-9d3b-360b7acb034b"),
-                            RoleId = new Guid("ec7b8465-68ea-4eed-8089-ec4481334749")
+                            UserId = new Guid("9b14c6c1-9d29-4aac-b73f-60a849159c82"),
+                            RoleId = new Guid("71e11f91-5e42-469d-a395-01b5b826b883")
                         });
                 });
 
@@ -774,10 +803,14 @@ namespace Loan.DataAccess.Migrations
                         .IsRequired();
 
                     b.HasOne("Loan.DataAccess.Models.Product", "Product")
-                        .WithMany("LoanItems")
+                        .WithMany()
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("Loan.DataAccess.Models.Product", null)
+                        .WithMany("LoanItems")
+                        .HasForeignKey("ProductId1");
 
                     b.Navigation("Loan");
 

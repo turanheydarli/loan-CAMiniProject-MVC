@@ -8,7 +8,8 @@ public class BranchEntityConfiguration : IEntityTypeConfiguration<Branch>
 {
     public void Configure(EntityTypeBuilder<Branch> builder)
     {
-        builder.HasMany(e => e.Employees).WithOne().HasForeignKey(e => e.BranchId).OnDelete(DeleteBehavior.Restrict);
-      
+        builder.HasMany(e => e.Employees)
+            .WithOne()
+            .HasForeignKey(e => e.BranchId).OnDelete(DeleteBehavior.Restrict);
     }
 }

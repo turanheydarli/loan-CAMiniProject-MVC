@@ -12,7 +12,7 @@ public interface IRepository<TEntity, TContext> where TContext : DbContext
         Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null);
 
     IList<TEntity?> GetList(Expression<Func<TEntity?, bool>> predicate = null,
-        Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null);
+        Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null, bool isTracking = false);
 
     TEntity Add(TEntity entity);
     TEntity Update(TEntity entity);

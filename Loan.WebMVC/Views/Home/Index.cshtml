@@ -1,16 +1,16 @@
-﻿@{
+﻿@using Loan.WebMVC.ViewComponents
+
+@{
     ViewData["Title"] = "Home";
 }
 
 
 @await Html.PartialAsync("Partials/_Featured")
 
-@await Component.InvokeAsync("Categories")
-
 @await Html.PartialAsync("Partials/_Offers")
 
-@await Html.PartialAsync("Partials/_Products")
+@await Component.InvokeAsync(typeof(TrendingProductsViewComponent))
 
 @await Html.PartialAsync("Partials/_Subscribe")
 
-@await Html.PartialAsync("Partials/_Vendor")
+@await Component.InvokeAsync(typeof(MerchantsViewComponent))

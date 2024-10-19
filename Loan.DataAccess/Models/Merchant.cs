@@ -5,8 +5,6 @@ namespace Loan.DataAccess.Models
 {
     public class Merchant : BaseEntity
     {
-        public Guid UserId { get; set; }
-        public AppUser User { get; set; }
         public MerchantStatus Status { get; set; }
         public int CurrentStep { get; set; }
         public string Name { get; set; }
@@ -16,7 +14,12 @@ namespace Loan.DataAccess.Models
         public Guid BusinessLicenseId { get; set; }
         public string RegistrationNotes { get; set; }
 
-        public ICollection<Branch> Branches { get; set; }
+        public Guid UserId { get; set; }
+        public virtual AppUser User { get; set; }
+        public Guid ProfileImageId { get; set; }
+        public Guid BannerImageId { get; set; }
+
+        public virtual ICollection<Branch> Branches { get; set; }
     }
 
     public enum MerchantStatus

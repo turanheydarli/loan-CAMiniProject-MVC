@@ -29,6 +29,50 @@
             </li>
         }
 
+        @if (User.IsInRole("Admin"))
+        {
+            <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="collapse" href="#carousels-submenu" aria-expanded="false" aria-controls="carousels-submenu">
+                    <i class="mdi mdi-circle-outline menu-icon"></i>
+                    <span class="menu-title">Carousels</span>
+                    <i class="menu-arrow"></i>
+                </a>
+                <div class="collapse" id="carousels-submenu">
+                    <ul class="nav flex-column sub-menu">
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="@Url.Action("Create", "Carousel", new { Area = "Admin" })">Create</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="@Url.Action("Index", "Carousel", new { Area = "Admin" })">List</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+        }
+        @if (User.IsInRole("Admin"))
+        {
+            <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="collapse" href="#categories-submenu" aria-expanded="false" aria-controls="categories-submenu">
+                    <i class="mdi mdi-circle-outline menu-icon"></i>
+                    <span class="menu-title">Categories</span>
+                    <i class="menu-arrow"></i>
+                </a>
+                <div class="collapse" id="categories-submenu">
+                    <ul class="nav flex-column sub-menu">
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="@Url.Action("Create", "Category", new { Area = "Admin" })">Create</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="@Url.Action("Index", "Category", new { Area = "Admin" })">List</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+        }
         @if (User.IsInRole("Merchant"))
         {
             <li class="nav-item">
@@ -75,7 +119,28 @@
             </li>
         }
 
+        @if (User.IsInRole("Employee"))
+        {
+            <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="collapse" href="#products-submenu" aria-expanded="false" aria-controls="products-submenu">
+                    <i class="mdi mdi-circle-outline menu-icon"></i>
+                    <span class="menu-title">Products</span>
+                    <i class="menu-arrow"></i>
+                </a>
+                <div class="collapse" id="products-submenu">
+                    <ul class="nav flex-column sub-menu">
 
+                        <li class="nav-item">
+                            <a class="nav-link" href="@Url.Action("Create", "Product", new { Area = "Admin" })">Create</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="@Url.Action("Index", "Product", new { Area = "Admin" })">List</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+        }
         <li class="nav-item">
             <a class="nav-link" href="@Url.Action("Settings", "Dashboard", new { Area = "Admin" })">
                 <i class="mdi mdi-settings menu-icon"></i>

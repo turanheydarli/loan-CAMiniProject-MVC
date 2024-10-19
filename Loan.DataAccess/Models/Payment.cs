@@ -6,5 +6,5 @@ public class Payment : BaseEntity
     public string PaymentType { get; set; }
     public Guid LoanId { get; set; }
 
-    public Loan Loan { get; set; }
+    public virtual Loan Loan { get; set; }
 }

@@ -12,7 +12,7 @@ public class Employee : BaseEntity
     public Guid BranchId { get; set; }
     public Guid UserId { get; set; }
 
-    public Branch Branch { get; set; }
-    public AppUser User { get; set; }
-    public ICollection<Loan> Loans { get; set; }
+    public virtual Branch Branch { get; set; }
+    public virtual AppUser User { get; set; }
+    public virtual ICollection<Loan> Loans { get; set; }
 }

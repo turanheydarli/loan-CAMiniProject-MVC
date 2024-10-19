@@ -1,3 +1,5 @@
+using Loan.DataAccess.Models;
+
 namespace Loan.Application.DTOs;
 
 public record CarouselItemDto : BaseDto
@@ -7,5 +9,9 @@ public record CarouselItemDto : BaseDto
     public string Offer { get; set; }
     public string Link { get; set; }
     public bool IsActive { get; set; }
-    public int CategoryId { get; set; }
+    public Guid CategoryId { get; set; }
+    public Category Category { get; set; }
+
+    public Guid BannerImageId { get; set; }
+    public MediaDto BannerImage { get; set; }
 }

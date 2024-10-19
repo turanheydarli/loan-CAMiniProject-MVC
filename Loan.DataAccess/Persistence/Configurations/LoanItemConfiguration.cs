@@ -11,6 +11,6 @@ public class LoanItemConfiguration : IEntityTypeConfiguration<LoanItem>
         builder.HasOne(p => p.Product)
             .WithMany()
             .HasForeignKey(p => p.ProductId)
-            .OnDelete(DeleteBehavior.Restrict); 
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

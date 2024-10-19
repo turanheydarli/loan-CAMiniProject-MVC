@@ -13,7 +13,8 @@ public record ProductDto : BaseDto
     public Guid CategoryId { get; set; }
     public CategoryDto Category { get; set; }
 
+    public Guid ThumbnailId { get; set; }
     public MediaDto Thumbnail { get; set; }
-    public ICollection<MediaDto> Images { get; set; }
-    public ICollection<LoanItem> LoanItems { get; set; }
+    // public List<MediaDto> Images { get; set; }
+    public List<LoanItem> LoanItems { get; set; }
 }

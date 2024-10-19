@@ -30,6 +30,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<ICategoryService, CategoryService>();
         services.AddScoped<ICarouselService, CarouselService>();
         services.AddScoped<IEmployeeService, EmployeeService>();
+        services.AddScoped<IProductService, ProductService>();
 
         services.AddAutoMapper(Assembly.GetAssembly(typeof(CustomProfile)));
 

@@ -12,9 +12,10 @@ public interface IAsyncRepository<TEntity, TContext> where TContext : DbContext
         Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null);
 
     Task<IList<TEntity>> GetListAsync(Expression<Func<TEntity?, bool>> predicate = null,
-        Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null);
+        Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null, bool isTracking = false);
 
     Task<TEntity> AddAsync(TEntity entity);
-    Task<TEntity>  UpdateAsync(TEntity entity);
-    Task<TEntity>  DeleteAsync(TEntity entity);
+    Task<TEntity> UpdateAsync(TEntity entity);
+    Task<TEntity> DeleteAsync(TEntity entity);
+    Task<TEntity> DetachAsync(TEntity entity);
 }

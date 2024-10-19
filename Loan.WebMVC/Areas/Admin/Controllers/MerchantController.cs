@@ -33,7 +33,7 @@ public class MerchantController : Controller
         return View(merchants);
     }
     
-    [HttpGet()]
+    [HttpGet]
     public async Task<IActionResult> ApproveApplication(Guid merchantId)
     {
         await _merchantService.ApproveApplication(merchantId);

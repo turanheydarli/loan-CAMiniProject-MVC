@@ -33,10 +33,10 @@ public class MerchantService : GenericService<Merchant, MerchantDto>, IMerchantS
     public override async Task<List<MerchantDto>> GetAllAsync()
     {
         var merchants = await base.GetAllAsync();
-
+  
         foreach (var merchant in merchants)
         {
-            merchant.BusinessLicense = await _mediaService.GetFileAsync(merchant.BusinessLicenseFileId);
+            merchant.BusinessLicense = await _mediaService.GetFileAsync(merchant.BusinessLicenseId);
         }
 
         return merchants;
@@ -124,7 +124,9 @@ public class MerchantService : GenericService<Merchant, MerchantDto>, IMerchantS
 
         if (merchant.BusinessLicense.File is { Length: > 0 })
         {
-            var fileId = await _mediaService.UploadFileAsync(merchant.BusinessLicense, createdMerchant.Id);
+            var fileId =
+                await _mediaService.UploadFileAsync(merchant.BusinessLicense, OwnerType.BusinessLicence,
+                    createdMerchant.Id);
 
             createdMerchant.BusinessLicenseId = fileId;
             await _repository.UpdateAsync(createdMerchant);
@@ -238,6 +240,45 @@ public class MerchantService : GenericService<Merchant, MerchantDto>, IMerchantS
         var merchant = await _repository.GetAsync(m => m.UserId == userId);
 
         return _mapper.Map<MerchantDto>(merchant);
+    }
+
+    public async Task SetBannerImageAsync(Guid merchantId, MediaDto image)
+    {
+        if (image == null)
+            throw new ArgumentNullException(nameof(image));
+
+        var product = await _repository.GetAsync(p => p.Id == merchantId);
+
+        if (product == null)
+            throw new ApplicationException($"Merchant with ID {merchantId} not found.");
+
+        var addedImageId = await _mediaService.UploadFileAsync(image, OwnerType.MerchantBanner, merchantId);
+
+        product.BannerImageId = addedImageId;
+
+        product.ModifiedDate = DateTime.UtcNow;
+
+        await _repository.UpdateAsync(product);
+    }
+
+    public async Task SetProfileImageAsync(Guid merchantId, MediaDto image)
+    {
+        if (image == null)
+            throw new ArgumentNullException(nameof(image));
+
+        var product = await _repository.GetAsync(p => p.Id == merchantId);
+
+        if (product == null)
+            throw new ApplicationException($"Merchant with ID {merchantId} not found.");
+
+
+        var addedImageId = await _mediaService.UploadFileAsync(image, OwnerType.MerchantProfile, merchantId);
+
+        product.ProfileImageId = addedImageId;
+
+        product.ModifiedDate = DateTime.UtcNow;
+
+        await _repository.UpdateAsync(product);
     }
 
     public async Task<List<MerchantDto>> GetAllAppliedAsync()

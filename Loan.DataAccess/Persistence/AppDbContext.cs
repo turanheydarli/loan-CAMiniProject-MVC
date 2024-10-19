@@ -9,6 +9,7 @@ public class AppDbContext : IdentityDbContext<AppUser, AppRole, Guid>
 {
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     {
+        
     }
 
     public DbSet<Merchant> Merchants { get; set; }
@@ -23,6 +24,13 @@ public class AppDbContext : IdentityDbContext<AppUser, AppRole, Guid>
     public DbSet<CarouselItem> CarouselItems { get; set; }
     public DbSet<Product> Products { get; set; }
     public DbSet<Media> Medias { get; set; }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        optionsBuilder.UseLazyLoadingProxies(); 
+        
+        base.OnConfiguring(optionsBuilder);
+    }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

@@ -13,8 +13,8 @@ public class Loan : BaseEntity
     public Guid CustomerId { get; set; }
     public Guid EmployeeId { get; set; }
 
-    public Customer Customer { get; set; }
-    public Employee Employee { get; set; }
-    public ICollection<LoanItem> LoanItems { get; set; }
-    public ICollection<Payment> Payments { get; set; }
+    public virtual Customer Customer { get; set; }
+    public virtual Employee Employee { get; set; }
+    public virtual ICollection<LoanItem> LoanItems { get; set; }
+    public virtual ICollection<Payment> Payments { get; set; }
 }
